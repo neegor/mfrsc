@@ -1,0 +1,80 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="/public/css/screen.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/public/js/jquery.blockUI.js"></script>
+
+<!-- html5.js for IE less than 9 -->
+<!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
+<!-- css3-mediaqueries.js for IE less than 9 -->
+<!--[if lt IE 9]>
+    <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+
+</head>
+<body>
+	<script>
+		function setBlock(text) {
+			$.blockUI({
+				message : "<b>" + text + "</b>",
+				fadeIn : 300,
+				fadeOut : 300,
+				showOverlay : false,
+				centerY : false,
+				css : {
+					width : '350px',
+					border : 'none',
+					padding : '10px',
+					backgroundColor : '#000',
+					'-webkit-border-radius' : '10px',
+					'-moz-border-radius' : '10px',
+					opacity : .5,
+					color : '#fff',
+				}
+			});
+		}
+		function unblock() {
+			$.unblockUI();
+		}
+		function get_search(){
+			setBlock("Loading...")
+					$("#content").load("/find", {
+						"search" : $("#search").val().replace(/ /g, "+")
+					}, function() {
+						unblock()
+					})
+		}
+		$(function() {
+			//DO NOT SEND FORMS ON "ENTER" PRESS
+			$("#searchForm").live('submit', function() {
+				return (false)
+			})
+
+			//SEND FORMS ON "ENTER" PRESS
+			$("body").live('keypress', function(e) {
+				if ($("#searchForm").is(":visible") && e.which == 13) {
+					setBlock("Loading...")
+					$("#content").load("/find", {
+						"search" : $("#search").val().replace(/ /g, "+")
+					}, function() {
+						unblock()
+					})
+				}
+			})
+
+		})
+	</script>
+	<header>
+		<form action="/find" method="post" id="searchForm">
+			<input class="search" type="text" name="search" id="search" placeholder="Find...">
+			<button type="button" onclick="get_search()">Find</button>
+		</form>
+	</header>
+	<section id="content"></section>
+</body>
+</html>

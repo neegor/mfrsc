@@ -1,0 +1,9 @@
+logs
+log
+.project
+.pydevproject
+.directory
+.settings
+*.pyc
+index.yaml
+
